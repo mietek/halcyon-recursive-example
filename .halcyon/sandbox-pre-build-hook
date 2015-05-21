@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+source "${HALCYON_DIR}/src.sh"
+
+
+sandbox_pre_build_hook () {
+	local tag source_dir constraints
+	expect_args tag source_dir constraints -- "$@"
+
+	local magic_dir
+	magic_dir="${source_dir}/.halcyon/c2hs-0.25.2"
+
+	local -a opts_a
+	opts_a=()
+	opts_a+=( --constraints="${magic_dir}/constraints" )
+	opts_a+=( --sandbox-extra-apps="${magic_dir}/sandbox-extra-apps" )
+	opts_a+=( --sandbox-extra-apps-constraints="${magic_dir}/sandbox-extra-apps-constraints" )
+
+	halcyon install "${opts_a[@]}" 'c2hs-0.25.2' || return 1
+}
+
+
+sandbox_pre_build_hook "$@"
